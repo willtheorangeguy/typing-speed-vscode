@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [18, 20]
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Run type checking
+      run: npm run check-types
+
+    - name: Build extension
+      run: npm run package
+
+    - name: Run tests
+      run: npm test
+      env:
+        DISPLAY: :99.0
+
+    - name: Package VSIX (Ubuntu only)
+      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18'
+      run: npx @vscode/vsce package
+
+    - name: Verify package size
+      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18'
+      run: |
+        ls -la *.vsix
+        file_size=$(stat -c%s *.vsix)
+        if [ $file_size -gt 50000000 ]; then
+          echo "Package size is too large: $file_size bytes"
+          exit 1
+        fi
+        echo "Package size OK: $file_size bytes"
