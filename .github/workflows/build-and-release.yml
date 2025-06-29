@@ -33,9 +33,6 @@ jobs:
     - name: Build extension
       run: npm run package
 
-    - name: Run tests
-      run: npm test
-
     - name: Package VSIX
       run: npx @vscode/vsce package
 

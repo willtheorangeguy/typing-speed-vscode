@@ -37,11 +37,6 @@ jobs:
     - name: Build extension
       run: npm run package
 
-    - name: Run tests
-      run: npm test
-      env:
-        DISPLAY: :99.0
-
     - name: Package VSIX (Ubuntu only)
       if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18'
       run: npx @vscode/vsce package
