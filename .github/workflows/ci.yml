@@ -42,11 +42,11 @@ jobs:
       run: xvfb-run -a npm test
 
     - name: Package VSIX (Ubuntu only)
-      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18'
+      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20'
       run: npx @vscode/vsce package
 
     - name: Verify package size
-      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '18'
+      if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20'
       run: |
         ls -la *.vsix
         file_size=$(stat -c%s *.vsix)
