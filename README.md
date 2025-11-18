@@ -53,6 +53,36 @@ To run the extension in development mode:
 3. Press `F5` to open a new VS Code window with the extension loaded
 4. Start typing to see the typing speed tracker in action
 
+### Running Tests
+
+The extension includes comprehensive unit tests that can be run locally or in CI:
+
+```bash
+# Install dependencies
+npm install
+
+# Compile tests
+npm run compile-tests
+
+# Run all tests
+npm test
+```
+
+On Linux systems, tests need to run with xvfb:
+```bash
+xvfb-run -a npm test
+```
+
+### CI/CD
+
+The project includes GitHub Actions workflows that automatically:
+- Run linting and type checking
+- Build the extension
+- Execute unit tests (on Linux)
+- Package the extension
+
+Tests run on multiple OS platforms (Ubuntu, Windows, macOS) with Node.js 18 and 20.
+
 ## Requirements
 
 - VS Code 1.101.0 or higher
