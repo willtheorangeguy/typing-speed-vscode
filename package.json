@@ -67,6 +67,9 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "package": "npm run compile",
+    "check-types": "tsc --noEmit",
+    "lint": "npm run check-types",
     "pretest": "npm run compile",
     "test": "mocha out/test/**/*.test.js"
   },
