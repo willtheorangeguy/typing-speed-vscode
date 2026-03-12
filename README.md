@@ -1,88 +1,46 @@
-# Typing Speed Tracker
+# VS Typing Speed
 
-A VS Code extension that tracks your typing speed in real-time and displays it in the status bar.
+VS Typing Speed is a Visual Studio Code extension that estimates how fast you are actively typing code and keeps the latest `WPM` visible in the status bar.
 
 ## Features
 
-- **Real-time tracking**: See your WPM (Words Per Minute) and CPM (Characters Per Minute) as you type
-- **Per-document sessions**: Each document maintains its own typing session
-- **Status bar integration**: Non-intrusive display with detailed tooltips
-- **Session management**: Automatic session reset after 5 minutes of inactivity
-- **Interactive commands**: Reset statistics and toggle display
+- Live `WPM` in the bottom status bar
+- Session totals for typed characters and estimated words
+- Session active time
+- Pause/resume tracking
+- Reset the current session
 
-## Usage
+## How it works
 
-1. Install and activate the extension
-2. Start typing in any document
-3. View your typing speed in the status bar (right side)
-4. Click the status bar item to see detailed statistics
-5. Use Command Palette commands for additional controls
+The extension listens for text insertions in the active editor and uses a few guardrails so your stats stay useful:
+
+- It tracks only active editor changes in regular text documents like `file` and `untitled`.
+- It ignores undo/redo operations.
+- It ignores replacements and large insertions so paste operations do not spike your numbers.
+- It treats words as `5` characters for WPM calculations.
+- It resets live WPM to `0` after an idle period.
+
+The status bar shows live `WPM`. Click it, or run the commands below, to inspect or manage the current session.
 
 ## Commands
 
-- **Typing Speed: Show Typing Statistics** - View detailed stats for current session
-- **Typing Speed: Reset Typing Statistics** - Reset stats for current document
-- **Typing Speed: Toggle Typing Speed Display** - Show/hide the status bar display
+- `VS Typing Speed: Show Current Stats`
+- `VS Typing Speed: Pause or Resume Tracking`
+- `VS Typing Speed: Reset Session Stats`
 
-## Status Bar Display
+## Settings
 
-The status bar shows: `⌨ %% WPM/%%% CPM`
-
-Example: `⌨ 45 WPM/225 CPM` means 45 words per minute and 225 characters per minute.
-
-Hover over the status bar item to see detailed information including:
-
-- Words per minute (WPM)
-- Characters per minute (CPM)
-- Total characters typed in session
-- Session duration
-
-## Session Management
-
-- Each document has its own typing session
-- Sessions automatically reset after 5 minutes of inactivity
-- Closing a document clears its session data
-- Manual reset options available through commands
+- `vstypingspeed.enabled`
+- `vstypingspeed.idleThresholdSeconds`
+- `vstypingspeed.refreshIntervalMs`
+- `vstypingspeed.pasteThresholdCharacters`
 
 ## Development
 
-To run the extension in development mode:
-
-1. Clone this repository
-2. Run `npm install` to install dependencies
-3. Press `F5` to open a new VS Code window with the extension loaded
-4. Start typing to see the typing speed tracker in action
-
-### Running Tests
-
-The extension includes comprehensive unit tests that can be run locally or in CI:
-
 ```bash
-# Install dependencies
 npm install
-
-# Compile tests
-npm run compile-tests
-
-# Run all tests
+npm run compile
 npm test
 ```
 
-On Linux systems, tests need to run with xvfb:
-```bash
-xvfb-run -a npm test
-```
-
-### CI/CD
-
-The project includes GitHub Actions workflows that automatically:
-- Run linting and type checking
-- Build the extension
-- Execute unit tests (on Linux)
-- Package the extension
-
-Tests run on multiple OS platforms (Ubuntu, Windows, macOS) with Node.js 18 and 20.
-
-## Requirements
-
-- VS Code 1.101.0 or higher
+Press `F5` in VS Code to launch the Extension Development Host and try the extension locally.
