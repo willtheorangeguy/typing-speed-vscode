@@ -168,8 +168,16 @@ export class TypingSpeedTracker {
     this.activeTimeMs = initialState.activeTimeMs;
     this.paused = initialState.paused;
     this.lastActivityAt = initialState.paused ? undefined : initialState.lastActivityAt;
-    this.recentEntries = initialState.paused ? [] : [...initialState.recentEntries];
+    this.recentEntries = initialState.paused ? [] : [...(initialState.recentEntries ?? [])];
     this.pruneRecentEntries(Date.now());
+
+    // If the persisted activity is older than the rolling window, every recent
+    // entry is pruned away on restore. Clearing lastActivityAt in that case
+    // avoids counting phantom trailing "active time" for a session the user has
+    // long since stopped typing in.
+    if (this.recentEntries.length === 0) {
+      this.lastActivityAt = undefined;
+    }
   }
 
   private pruneRecentEntries(now: number): void {

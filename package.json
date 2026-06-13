@@ -3,6 +3,16 @@
   "displayName": "VS Typing Speed",
   "description": "Track live coding WPM and session typing stats in the VS Code status bar.",
   "version": "0.0.1",
+  "publisher": "willtheorangeguy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/willtheorangeguy/typing-speed-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/willtheorangeguy/typing-speed-vscode/issues"
+  },
+  "homepage": "https://github.com/willtheorangeguy/typing-speed-vscode#readme",
   "engines": {
     "vscode": "^1.88.0"
   },
