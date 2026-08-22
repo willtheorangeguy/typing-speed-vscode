@@ -2,7 +2,7 @@
 
 Five small modules. Almost all of the thinking is in one of them.
 
-```
+```text
 onDidChangeTextDocument
    └── isTrackableEditorChange()      active editor? trackable scheme?
           └── countTypedCharacters()  what of this event was typing?
@@ -64,13 +64,13 @@ Two places compute it:
 
 ## Live WPM
 
-```
+```text
 liveWpm = (recentCharacters / 5) / (activeSampleMs / 60000)
 ```
 
 with
 
-```
+```text
 activeSampleMs = max(rollingActiveMs, MINIMUM_SAMPLE_MS)
 ```
 

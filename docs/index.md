@@ -2,7 +2,7 @@
 
 A VS Code extension that estimates your live typing speed and keeps it in the status bar.
 
-```
+```text
 typing-speed-vscode/
 ├── src/
 │   ├── extension.ts                    activation, event wiring, commands, config

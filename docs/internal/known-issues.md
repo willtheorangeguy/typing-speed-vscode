@@ -7,12 +7,11 @@ licensing decision rather than a documentation one.
 Ordered by severity. See [`docs/roadmap.md`](../roadmap.md) for the narrative version,
 which also covers deliberate non-goals.
 
-
 **4 open:** 3 medium, 1 low.
 
 ## 1. CLAUDE.md documents three npm scripts and a CONTRIBUTING.md that do not exist
 
-**Severity:** Medium  
+**Severity:** Medium
 **Where:** `CLAUDE.md` 'Release' section vs `package.json`, repository root
 
 **What:** CLAUDE.md instructs: 'Use the release scripts from CONTRIBUTING.md' and lists `npm run release:patch`, `release:minor`, and `release:major`. `package.json` defines none of them -- its scripts are `vscode:prepublish`, `compile`, `watch`, `package`, `check-types`, `lint`, `pretest`, and `test`. `CONTRIBUTING.md` was removed when health files were consolidated into the org-wide `.github` repository.
@@ -23,7 +22,7 @@ which also covers deliberate non-goals.
 
 ## 2. CLAUDE.md describes the minimum sample as a gate; the code uses it as a divisor floor
 
-**Severity:** Medium  
+**Severity:** Medium
 **Where:** `CLAUDE.md` 'WPM calculation' vs `src/tracking/typingSpeedTracker.ts` -> `calculateLiveWpm`
 
 **What:** CLAUDE.md states: 'Requires at least 5 s of active sample time (`MINIMUM_SAMPLE_MS`) before reporting a non-zero WPM.' The code computes `activeSampleMs = Math.max(this.calculateRollingActiveMs(now), this.options.minimumSampleMs)` -- a floor on the divisor, applied unconditionally. A single character typed half a second ago yields `(1/5) / (5000/60000)` = 2.4 WPM, not zero.
@@ -34,7 +33,7 @@ which also covers deliberate non-goals.
 
 ## 3. Multi-cursor typing multiplies the character count by the number of cursors
 
-**Severity:** Medium  
+**Severity:** Medium
 **Where:** `src/tracking/typingSpeedTracker.ts` -> `countTypedCharacters`
 
 **What:** One keystroke with N cursors active produces a single change event containing N `contentChanges`, each with `rangeLength === 0` and one character of text. The loop sums them all, so the keystroke is counted N times. Above `pasteThresholdCharacters` (20) the running total trips the paste guard and the **entire event returns 0** instead.
@@ -45,7 +44,7 @@ which also covers deliberate non-goals.
 
 ## 4. The trailing active-time allowance is persisted, then counted a second time after a reload
 
-**Severity:** Low  
+**Severity:** Low
 **Where:** `src/tracking/typingSpeedTracker.ts` -> `getPersistedState`, `getActiveTimeMs`, `recordTypedCharacters`
 
 **What:** `getActiveTimeMs(now)` returns the stored `activeTimeMs` plus a trailing allowance of `min(now - lastActivityAt, idleThresholdMs)`, so the display advances while typing continues. `getPersistedState` saves **that** value as `activeTimeMs`. `restore` assigns it back to the field and, when rolling entries survived, keeps `lastActivityAt` -- so the next `recordTypedCharacters` measures the gap from that same timestamp and adds an overlapping interval again.
@@ -53,7 +52,6 @@ which also covers deliberate non-goals.
 **Why it matters:** Session active time is inflated by up to one idle threshold per reload, silently and permanently -- the field is a running total with no way to reconcile it. Window reloads are routine in VS Code (extension development, settings changes, updates), so the error accumulates rather than being a one-off. The `restore` method already guards the related case where all entries aged out, which shows the hazard was seen from one direction but not the other.
 
 **Suggested fix:** Persist the raw `activeTimeMs` field rather than `getActiveTimeMs(now)`, keeping the trailing allowance a display-only concern. If the trailing time should survive a reload, fold it into the field and clear `lastActivityAt` at the same moment, as the pause path already does.
-
 
 ---
 
