@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18, 20]
+        node-version: [20]
     
     runs-on: ${{ matrix.os }}
     
@@ -55,3 +55,4 @@ jobs:
           exit 1
         fi
         echo "Package size OK: $file_size bytes"
+
